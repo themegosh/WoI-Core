@@ -58,7 +58,7 @@ namespace
             Field* fields = result->Fetch();
             uint32 const id = fields[0].GetUInt32();
             if (queue.empty() || queue.back().id != id)
-                queue.push_back({ id, fields[1].GetUInt64(), fields[2].GetString(), fields[3].GetString(), fields[4].GetUInt32(), {} });
+                queue.push_back({ id, fields[1].GetUInt32(), fields[2].GetString(), fields[3].GetString(), fields[4].GetUInt32(), {} });
 
             if (uint32 const itemEntry = fields[5].GetUInt32())
                 queue.back().items.push_back({ itemEntry, fields[6].GetUInt32() });
