@@ -4173,3 +4173,53 @@ Metric.OverallStatusInterval = 1
 
 #
 ###################################################################################################
+
+###################################################################################################
+# WORLD OF IMMORTALITY CUSTOMIZATIONS
+#
+#    ExternalMail
+#        Description: Deliver mail queued by external tools in the `mail_external` and
+#                     `mail_external_items` tables of the characters database.
+#        Default:     0 - (Disabled)
+#                     1 - (Enabled)
+
+ExternalMail = 0
+
+#
+#    ExternalMailInterval
+#        Description: How often the external mail queue is processed, in minutes.
+#        Default:     1
+
+ExternalMailInterval = 1
+
+#
+#    Anticheat.Enable
+#        Description: Enables or disables the Anticheat system.
+#        Default:     1 - (Enabled)
+#                     0 - (Disabled)
+
+Anticheat.Enable = 1
+
+#
+#    Anticheat.ReportsForIngameWarnings
+#        Description: Number of reports a player needs before game masters are notified in-game
+#                     whenever that player generates a new report.
+#        Default:     70
+
+Anticheat.ReportsForIngameWarnings = 70
+
+#
+#    Anticheat.DetectionsEnabled
+#        Description: Bit mask of enabled detections.
+#                     SPEED_HACK_DETECTION          = 1
+#                     FLY_HACK_DETECTION            = 2
+#                     WALK_WATER_HACK_DETECTION     = 4
+#                     JUMP_HACK_DETECTION           = 8
+#                     TELEPORT_PLANE_HACK_DETECTION = 16
+#                     CLIMB_HACK_DETECTION          = 32
+#        Default:     31
+
+Anticheat.DetectionsEnabled = 31
+
+#
+###################################################################################################

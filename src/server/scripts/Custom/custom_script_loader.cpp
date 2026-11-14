@@ -15,10 +15,23 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "AnticheatMgr.h"
+
 // This is where scripts' loading functions should be declared:
+void AddSC_cs_anticheat();
+void AddSC_cs_woi();
+void AddSC_tele_npc_fun_vote();
+void AddSC_tele_npc_vote();
+void AddSC_woi_world();
 
 // The name of this function should match:
 // void Add${NameOfDirectory}Scripts()
 void AddCustomScripts()
 {
+    sAnticheatMgr->StartScripts();
+    AddSC_cs_anticheat();
+    AddSC_cs_woi();
+    AddSC_tele_npc_fun_vote();
+    AddSC_tele_npc_vote();
+    AddSC_woi_world();
 }

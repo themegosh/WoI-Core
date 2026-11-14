@@ -15,6 +15,7 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "AnticheatMgr.h"
 #include "Battleground.h"
 #include "Common.h"
 #include "Corpse.h"
@@ -468,6 +469,9 @@ void WorldSession::HandleMovementOpcode(OpcodeClient opcode, MovementInfo& movem
         plrMover->GetTransport()->RemovePassenger(plrMover);
         movementInfo.transport.Reset();
     }
+
+    if (plrMover)
+        sAnticheatMgr->StartHackDetection(plrMover, movementInfo, opcode);
 
     /* process position-change */
     movementInfo.guid = mover->GetGUID();
