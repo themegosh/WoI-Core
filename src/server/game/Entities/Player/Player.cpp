@@ -107,6 +107,7 @@
 #include "UpdateFieldFlags.h"
 #include "UpdateMask.h"
 #include "Util.h"
+#include "WoI.h"
 #include "Weather.h"
 #include "WeatherMgr.h"
 #include "World.h"
@@ -1580,6 +1581,9 @@ bool Player::TeleportTo(uint32 mapid, float x, float y, float z, float orientati
     }
     else
         TC_LOG_DEBUG("maps", "Player {} ({}) is being teleported to map (MapID: {})", GetName(), GetGUID().ToString(), mapid);
+
+    if (!WoI::GuildHouse::OnTeleport(this, mapid))
+        return false;
 
     if (m_vehicle)
         ExitVehicle();
