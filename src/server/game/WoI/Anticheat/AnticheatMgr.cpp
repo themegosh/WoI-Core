@@ -53,7 +53,7 @@ void AnticheatMgr::StartScripts()
 
 void AnticheatMgr::LoadConfig()
 {
-    _enabled = sConfigMgr->GetBoolDefault("Anticheat.Enable", true);
+    _enabled = sConfigMgr->GetBoolDefault("Anticheat.Enable", false);
     _reportsForIngameWarnings = static_cast<uint32>(sConfigMgr->GetIntDefault("Anticheat.ReportsForIngameWarnings", 70));
     _detectionsEnabled = static_cast<uint32>(sConfigMgr->GetIntDefault("Anticheat.DetectionsEnabled", 31));
 }

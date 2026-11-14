@@ -1,7 +1,7 @@
 -- trinity_string ids used by WoIStrings (src/server/game/WoI/WoI.h). The original texts only
 -- existed in the live database, so these are reconstructed from how each string is used.
 -- Replace with your own wording if you exported the old rows.
-DELETE FROM `trinity_string` WHERE `entry` IN (11103, 11104, 11105, 11106, 11107, 11108, 11109, 11110, 11111, 11112, 11114);
+DELETE FROM `trinity_string` WHERE `entry` IN (11103, 11104, 11105, 11106, 11107, 11108, 11109, 11110, 11111, 11112, 11114, 11115);
 INSERT INTO `trinity_string` (`entry`, `content_default`) VALUES
 (11103, 'You have fully healed %s.'),
 (11104, 'You have %u vote points.'),
@@ -13,6 +13,7 @@ INSERT INTO `trinity_string` (`entry`, `content_default`) VALUES
 (11110, 'You forced a vote for %s.'),
 (11111, 'A game master has registered a vote for you.'),
 (11112, 'You have not voted in the last 12 hours. Vote to unlock every teleport location.'),
+(11115, 'Some teleport locations are reserved for approved accounts.'),
 (11114, 'Your guild does not have a guild house.');
 
 -- Command help follows the renamed commands (.appear -> .goname, .summon -> .namego).

@@ -29,6 +29,7 @@ public:
 
     void OnConfigLoad(bool /*reload*/) override
     {
+        WoI::LoadSettings();
         _enabled = sConfigMgr->GetIntDefault("ExternalMail", 0) != 0;
         uint32 const intervalMinutes = std::max<uint32>(1, sConfigMgr->GetIntDefault("ExternalMailInterval", 1));
         _timer.SetInterval(intervalMinutes * MINUTE * IN_MILLISECONDS);

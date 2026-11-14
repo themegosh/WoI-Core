@@ -4177,6 +4177,59 @@ Metric.OverallStatusInterval = 1
 ###################################################################################################
 # WORLD OF IMMORTALITY CUSTOMIZATIONS
 #
+#    WoI.Access.Mode
+#        Description: Who may use the restricted teleporter menus (Dungeons, Player Tools, PvP,
+#                     Guild House). Values add up, so 3 means voters and whitelisted accounts.
+#        Default:     1 - (Voted in the last 12 hours)
+#                     0 - (Everybody, no checks and no messages)
+#                     2 - (Accounts listed in `woi_access` in the auth database)
+#                     3 - (Voted or whitelisted)
+
+WoI.Access.Mode = 1
+
+#
+#    WoI.InstanceReset.Currency
+#        Description: What the teleporter's "Reset Instance Locks" costs.
+#        Default:     1 - (Vote points, see WoI.InstanceReset.VotePoints)
+#                     0 - (Free)
+#                     2 - (Gold, see WoI.InstanceReset.Gold)
+
+WoI.InstanceReset.Currency = 1
+
+#
+#    WoI.InstanceReset.VotePoints
+#        Description: Vote point price of an instance reset. 0 makes it free.
+#        Default:     2
+
+WoI.InstanceReset.VotePoints = 2
+
+#
+#    WoI.InstanceReset.Gold
+#        Description: Gold price of an instance reset when the currency is gold. 0 makes it free.
+#        Default:     50
+
+WoI.InstanceReset.Gold = 50
+
+#
+#    WoI.Teleporter.CooldownResetGold
+#    WoI.FunTeleporter.CooldownResetGold
+#        Description: Gold price of "Reset Cooldowns" on the tele_npc_vote and tele_npc_fun_vote
+#                     NPCs. 0 makes it free.
+#        Default:     100 (tele_npc_vote), 1000 (tele_npc_fun_vote)
+
+WoI.Teleporter.CooldownResetGold = 100
+WoI.FunTeleporter.CooldownResetGold = 1000
+
+#
+#    WoI.GuildHouse.Enable
+#        Description: Shows the Guild House entry in the teleporter menu. Existing guild houses and
+#                     the map 37 phasing are unaffected.
+#        Default:     1 - (Enabled)
+#                     0 - (Disabled)
+
+WoI.GuildHouse.Enable = 1
+
+#
 #    ExternalMail
 #        Description: Deliver mail queued by external tools in the `mail_external` and
 #                     `mail_external_items` tables of the characters database.
@@ -4195,10 +4248,10 @@ ExternalMailInterval = 1
 #
 #    Anticheat.Enable
 #        Description: Enables or disables the Anticheat system.
-#        Default:     1 - (Enabled)
-#                     0 - (Disabled)
+#        Default:     0 - (Disabled)
+#                     1 - (Enabled)
 
-Anticheat.Enable = 1
+Anticheat.Enable = 0
 
 #
 #    Anticheat.ReportsForIngameWarnings

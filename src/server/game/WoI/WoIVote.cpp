@@ -92,9 +92,17 @@ void ForceVote(Player* player)
 
 void UnbindAllInstances(Player* player)
 {
-    if (GetPoints(player) < InstanceResetCost)
+    Settings const& settings = GetSettings();
+    Currency const currency = InstanceResetCurrency();
+
+    if (currency == Currency::VotePoints && GetPoints(player) < int32(settings.instanceResetVotePoints))
     {
         Notify(player, "|cffffcc00[Vote Manager]|r|cffff0000 You do not have enough Vote Points to use this utility.|r");
+        return;
+    }
+    if (currency == Currency::Gold && int64(player->GetMoney()) < int64(settings.instanceResetGold) * 10000)
+    {
+        Notify(player, "You do not have enough gold.");
         return;
     }
 
@@ -121,7 +129,10 @@ void UnbindAllInstances(Player* player)
     }
 
     ChatHandler(player->GetSession()).PSendSysMessage("All (%u) of your instances have been reset!", counter);
-    ModPoints(player, -InstanceResetCost, true);
+    if (currency == Currency::VotePoints)
+        ModPoints(player, -int32(settings.instanceResetVotePoints), true);
+    else if (currency == Currency::Gold)
+        TryChargeGold(player, settings.instanceResetGold);
 }
 
 void ResetAllInstances(Player* player)

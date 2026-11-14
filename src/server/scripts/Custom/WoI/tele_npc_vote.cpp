@@ -25,15 +25,23 @@
 #include "WoI.h"
 #include "WorldSession.h"
 
+namespace
+{
+    std::string CooldownResetLabel(uint32 gold)
+    {
+        return gold ? "Reset Cooldowns Cost: [" + WoI::GoldPrice(gold) + "]" : std::string("Reset Cooldowns");
+    }
+}
+
 struct tele_npc_vote : public ScriptedAI
 {
     tele_npc_vote(Creature* creature) : ScriptedAI(creature) { }
 
     bool OnGossipHello(Player* player) override
     {
-        bool votecheck = WoI::Vote::HasVoted(player);
-        if (!votecheck)
-            ChatHandler(player->GetSession()).SendSysMessage(WOI_STRING_TELE_VOTE_CHECK_FAILED);
+        bool hasAccess = WoI::HasAccess(player);
+        if (!hasAccess)
+            WoI::SendAccessDenied(player);
 
         // remove stealth
         if (player->HasAura(1784))
@@ -51,24 +59,26 @@ struct tele_npc_vote : public ScriptedAI
         {
             AddGossipItemFor(player, GOSSIP_ICON_TALK, "Alliance Town ->", GOSSIP_SENDER_MAIN, 1000);
             AddGossipItemFor(player, GOSSIP_ICON_TALK, "Neutral Town ->", GOSSIP_SENDER_MAIN, 3000);
-            if (votecheck)
+            if (hasAccess)
             {
                 AddGossipItemFor(player, GOSSIP_ICON_TALK, "Dungeons ->", GOSSIP_SENDER_MAIN, 5000);
                 AddGossipItemFor(player, GOSSIP_ICON_TALK, "Player Tools ->", GOSSIP_SENDER_MAIN, 4000);
                 AddGossipItemFor(player, GOSSIP_ICON_BATTLE, "Alliance vs Horde PvP", GOSSIP_SENDER_MAIN, 3500);
-                AddGossipItemFor(player, GOSSIP_ICON_BATTLE, "Guild House Menu", GOSSIP_SENDER_MAIN, 10010);
+                if (WoI::GetSettings().guildHouseEnabled)
+                    AddGossipItemFor(player, GOSSIP_ICON_BATTLE, "Guild House Menu", GOSSIP_SENDER_MAIN, 10010);
             }
         }
         else // Main Menu for Horde
         {
             AddGossipItemFor(player, GOSSIP_ICON_TALK, "Horde Town ->", GOSSIP_SENDER_MAIN, 2000);
             AddGossipItemFor(player, GOSSIP_ICON_TALK, "Neutral Town ->", GOSSIP_SENDER_MAIN, 3000);
-            if (votecheck)
+            if (hasAccess)
             {
                 AddGossipItemFor(player, GOSSIP_ICON_TALK, "Dungeons ->", GOSSIP_SENDER_MAIN, 5000);
                 AddGossipItemFor(player, GOSSIP_ICON_TALK, "Player Tools ->", GOSSIP_SENDER_MAIN, 4000);
                 AddGossipItemFor(player, GOSSIP_ICON_BATTLE, "Alliance vs Horde PvP", GOSSIP_SENDER_MAIN, 3500);
-                AddGossipItemFor(player, GOSSIP_ICON_BATTLE, "Guild House Menu", GOSSIP_SENDER_MAIN, 10010);
+                if (WoI::GetSettings().guildHouseEnabled)
+                    AddGossipItemFor(player, GOSSIP_ICON_BATTLE, "Guild House Menu", GOSSIP_SENDER_MAIN, 10010);
             }
         }
 
@@ -79,7 +89,7 @@ struct tele_npc_vote : public ScriptedAI
 
     void SendDefaultMenu(Player* player, uint32 action)
     {
-    bool votecheck = WoI::Vote::HasVoted(player);
+    bool hasAccess = WoI::HasAccess(player);
     // Not allow in combat
     if (player->IsInCombat())
     {
@@ -141,24 +151,26 @@ struct tele_npc_vote : public ScriptedAI
         {
             AddGossipItemFor(player, GOSSIP_ICON_TALK, "Alliance Town ->", GOSSIP_SENDER_MAIN, 1000);
             AddGossipItemFor(player, GOSSIP_ICON_TALK, "Neutral Town ->", GOSSIP_SENDER_MAIN, 3000);
-            if (votecheck)
+            if (hasAccess)
             {
                 AddGossipItemFor(player, GOSSIP_ICON_TALK, "Dungeons ->", GOSSIP_SENDER_MAIN, 5000);
                 AddGossipItemFor(player, GOSSIP_ICON_TALK, "Player Tools ->", GOSSIP_SENDER_MAIN, 4000);
                 AddGossipItemFor(player, GOSSIP_ICON_BATTLE, "Alliance vs Horde PvP", GOSSIP_SENDER_MAIN, 3500);
-                AddGossipItemFor(player, GOSSIP_ICON_BATTLE, "Take me to my Guild House", GOSSIP_SENDER_MAIN, 10010);
+                if (WoI::GetSettings().guildHouseEnabled)
+                    AddGossipItemFor(player, GOSSIP_ICON_BATTLE, "Take me to my Guild House", GOSSIP_SENDER_MAIN, 10010);
             }
         }
         else // Main Menu for Horde
         {
             AddGossipItemFor(player, GOSSIP_ICON_TALK, "Horde Town ->", GOSSIP_SENDER_MAIN, 2000);
             AddGossipItemFor(player, GOSSIP_ICON_TALK, "Neutral Town ->", GOSSIP_SENDER_MAIN, 3000);
-            if (votecheck)
+            if (hasAccess)
             {
                 AddGossipItemFor(player, GOSSIP_ICON_TALK, "Dungeons ->", GOSSIP_SENDER_MAIN, 5000);
                 AddGossipItemFor(player, GOSSIP_ICON_TALK, "Player Tools ->", GOSSIP_SENDER_MAIN, 4000);
                 AddGossipItemFor(player, GOSSIP_ICON_BATTLE, "Alliance vs Horde PvP", GOSSIP_SENDER_MAIN, 3500);
-                AddGossipItemFor(player, GOSSIP_ICON_BATTLE, "Take me to my Guild House", GOSSIP_SENDER_MAIN, 10010);
+                if (WoI::GetSettings().guildHouseEnabled)
+                    AddGossipItemFor(player, GOSSIP_ICON_BATTLE, "Take me to my Guild House", GOSSIP_SENDER_MAIN, 10010);
             }
         }
 
@@ -252,8 +264,8 @@ struct tele_npc_vote : public ScriptedAI
         AddGossipItemFor(player, GOSSIP_ICON_INTERACT_2, "Reset Talent Points", GOSSIP_SENDER_MAIN, 4010);
         AddGossipItemFor(player, GOSSIP_ICON_INTERACT_2, "Reset Pet Talent Points", GOSSIP_SENDER_MAIN, 4015);
         AddGossipItemFor(player, GOSSIP_ICON_INTERACT_2, "Remove Resurrect Sickness", GOSSIP_SENDER_MAIN, 4020);
-        AddGossipItemFor(player, GOSSIP_ICON_INTERACT_2, "Reset Instance Locks Cost: [2 VP]", GOSSIP_SENDER_MAIN, 10015);
-        AddGossipItemFor(player, GOSSIP_ICON_INTERACT_2, "Reset Cooldowns Cost: [100 Gold]", GOSSIP_SENDER_MAIN, 10025);
+        AddGossipItemFor(player, GOSSIP_ICON_INTERACT_2, WoI::InstanceResetPrice().empty() ? std::string("Reset Instance Locks") : "Reset Instance Locks Cost: [" + WoI::InstanceResetPrice() + "]", GOSSIP_SENDER_MAIN, 10015);
+        AddGossipItemFor(player, GOSSIP_ICON_INTERACT_2, CooldownResetLabel(WoI::GetSettings().teleporterCooldownResetGold), GOSSIP_SENDER_MAIN, 10025);
         AddGossipItemFor(player, GOSSIP_ICON_TALK, "<- [Main Menu]", GOSSIP_SENDER_MAIN, 5005);
 
         SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, me->GetGUID());
@@ -718,7 +730,13 @@ struct tele_npc_vote : public ScriptedAI
     break;
 
     case 10015: // Player Tools
-        AddGossipItemFor(player, GOSSIP_ICON_INTERACT_2, "Yes, at a Cost of 2 VP.", GOSSIP_SENDER_MAIN, 10020);
+        if (WoI::InstanceResetPrice().empty())
+        {
+            CloseGossipMenuFor(player);
+            WoI::Vote::UnbindAllInstances(player);
+            break;
+        }
+        AddGossipItemFor(player, GOSSIP_ICON_INTERACT_2, "Yes, at a Cost of " + WoI::InstanceResetPrice() + ".", GOSSIP_SENDER_MAIN, 10020);
         AddGossipItemFor(player, GOSSIP_ICON_INTERACT_2, "No, Return to Main Menu.", GOSSIP_SENDER_MAIN, 5005);
 
         SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, me->GetGUID());
@@ -730,13 +748,8 @@ struct tele_npc_vote : public ScriptedAI
     break;
 
     case 10025:
-        if (player->GetMoney() < 1000000)
+        if (WoI::TryChargeGold(player, WoI::GetSettings().teleporterCooldownResetGold))
         {
-            ChatHandler(player->GetSession()).SendSysMessage("You do not have enough gold.");
-        }
-        else
-        {
-            player->ModifyMoney(-1000000);
             player->GetSpellHistory()->ResetAllCooldowns();
             ChatHandler(player->GetSession()).SendSysMessage("Your cooldowns have been reset.");
         }
